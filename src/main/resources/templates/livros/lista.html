@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca | Livros</title>
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+<body>
+<header class="topo">
+    <div class="container topo-conteudo">
+        <a class="marca" th:href="@{/livros}">Biblioteca<span>.</span></a>
+        <span class="submarca">Gerenciamento de acervo</span>
+    </div>
+</header>
+<main class="container">
+    <section class="cabecalho">
+        <div><p class="etiqueta">PAINEL DE CONTROLE</p><h1>Livros cadastrados</h1>
+            <p class="descricao">Consulte, cadastre, edite e organize os livros da biblioteca.</p></div>
+        <a class="botao primario" th:href="@{/livros/novo}">+ Novo livro</a>
+    </section>
+
+    <div class="alerta" th:if="${mensagem}" th:text="${mensagem}"></div>
+
+    <section class="painel">
+        <form class="busca" th:action="@{/livros}" method="get">
+            <input type="text" name="busca" placeholder="Buscar por título ou autor..." th:value="${busca}">
+            <button class="botao escuro" type="submit">Buscar</button>
+            <a class="botao claro" th:href="@{/livros}">Limpar</a>
+        </form>
+        <div class="tabela-responsiva">
+        <table>
+            <thead><tr><th>ID</th><th>Título</th><th>Autor</th><th>Ano</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr></thead>
+            <tbody>
+            <tr th:each="livro : ${livros}">
+                <td th:text="${livro.id}"></td>
+                <td class="destaque" th:text="${livro.titulo}"></td>
+                <td th:text="${livro.autor}"></td>
+                <td th:text="${livro.ano}"></td>
+                <td th:text="${'R$ ' + #numbers.formatDecimal(livro.preco, 1, 'POINT', 2, 'COMMA')}"></td>
+                <td><span class="estoque" th:text="${livro.estoque}"></span></td>
+                <td class="acoes">
+                    <a class="acao editar" th:href="@{/livros/editar/{id}(id=${livro.id})}">Editar</a>
+                    <form th:action="@{/livros/excluir/{id}(id=${livro.id})}" method="post" onsubmit="return confirm('Deseja realmente excluir este livro?');">
+                        <button class="acao excluir" type="submit">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(livros)}"><td colspan="7" class="vazio">Nenhum livro encontrado. Cadastre o primeiro!</td></tr>
+            </tbody>
+        </table>
+        </div>
+        <p class="rodape-tabela" th:text="${#lists.size(livros)} + ' livro(s) encontrado(s)'"></p>
+    </section>
+</main>
+<footer class="container rodape">Projeto acadêmico • Spring Boot + Thymeleaf + MySQL</footer>
+</body>
+</html>

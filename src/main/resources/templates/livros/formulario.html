@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${tituloPagina} + ' | Biblioteca'"></title>
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+<body>
+<header class="topo"><div class="container topo-conteudo">
+    <a class="marca" th:href="@{/livros}">Biblioteca<span>.</span></a>
+    <span class="submarca">Gerenciamento de acervo</span>
+</div></header>
+<main class="container formulario-container">
+    <a class="voltar" th:href="@{/livros}">← Voltar para a lista</a>
+    <section class="form-card">
+        <p class="etiqueta">DADOS DO ACERVO</p>
+        <h1 th:text="${tituloPagina}"></h1>
+        <p class="descricao">Preencha os campos abaixo para salvar as informações do livro.</p>
+        <form th:action="@{/livros/salvar}" th:object="${livro}" method="post">
+            <input type="hidden" th:field="*{id}">
+            <div class="campo">
+                <label for="titulo">Título</label>
+                <input id="titulo" type="text" th:field="*{titulo}" placeholder="Ex.: O Pequeno Príncipe">
+                <small class="erro" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></small>
+            </div>
+            <div class="campo">
+                <label for="autor">Autor</label>
+                <input id="autor" type="text" th:field="*{autor}" placeholder="Ex.: Antoine de Saint-Exupéry">
+                <small class="erro" th:if="${#fields.hasErrors('autor')}" th:errors="*{autor}"></small>
+            </div>
+            <div class="linha-campos">
+                <div class="campo">
+                    <label for="ano">Ano de publicação</label>
+                    <input id="ano" type="number" th:field="*{ano}" min="1000" max="2100" placeholder="1943">
+                    <small class="erro" th:if="${#fields.hasErrors('ano')}" th:errors="*{ano}"></small>
+                </div>
+                <div class="campo">
+                    <label for="preco">Preço (R$)</label>
+                    <input id="preco" type="number" th:field="*{preco}" min="0" step="0.01" placeholder="39.90">
+                    <small class="erro" th:if="${#fields.hasErrors('preco')}" th:errors="*{preco}"></small>
+                </div>
+                <div class="campo">
+                    <label for="estoque">Estoque</label>
+                    <input id="estoque" type="number" th:field="*{estoque}" min="0" placeholder="10">
+                    <small class="erro" th:if="${#fields.hasErrors('estoque')}" th:errors="*{estoque}"></small>
+                </div>
+            </div>
+            <div class="botoes-form">
+                <a class="botao claro" th:href="@{/livros}">Cancelar</a>
+                <button class="botao primario" type="submit">Salvar livro</button>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
